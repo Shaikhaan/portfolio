@@ -8,7 +8,8 @@ Open `index.html` in a browser to view it locally.
 
 - Content (name, projects, experience, skills, contact) is plain HTML in `index.html`.
 - Colors and fonts are tokens in the `:root` block at the top of the `<style>`.
-- To show a real project screenshot, replace a card's `.shot-body` contents with `<img src="your-screenshot.png" alt="...">`.
+- Each project's diagram is an inline SVG inside its `<figure class="fig">`. Boxes are `<rect>`, connectors are `<path>`, labels are `<text>`.
+- The "Calm" button in the top bar turns off all animation for visitors who prefer less motion.
 
 ## Hosting on GitHub Pages
 
