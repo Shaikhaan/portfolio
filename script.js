@@ -186,14 +186,15 @@
   }
   // Unit tangent (direction of travel) and the normal pointing to the tail's outer, right-hand side
   function frame(t) {
-    var a = pt(Math.max(0, t - .002)), b = pt(Math.min(1, t + .002));
+    var a = pt(t - .002), b = pt(t + .002);
     var dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
     return { tx: dx / l, ty: dy / l, nx: -dy / l, ny: dx / l };
   }
   function ribbonWidth() { return Math.min(W, 1400) * .17; }
-  // Point inside the tail: s runs 0 (head) to 1 (far end), o runs 0 (inner white edge) to 1 (outer haze)
+  // Point inside the tail: s runs 0 (head) to 1 (far end), o runs 0 (inner white edge) to 1 (outer haze).
+  // The width grows with distance from the head, measured the same way however far back the tail starts.
   function at(th, t0, s, o) {
-    var t = th - (th - t0) * s, p = pt(t), f = frame(t), w = 1.5 + ribbonWidth() * Math.pow(s, 1.25);
+    var t = th - (th - t0) * s, p = pt(t), f = frame(t), w = 1.5 + ribbonWidth() * Math.pow(Math.max(0, (th - t) / th), 1.25);
     if (f.nx > 0) { f.nx = -f.nx; f.ny = -f.ny; }
     return { x: p.x - f.nx * w * o, y: p.y - f.ny * w * o, f: f, w: w };
   }
@@ -398,6 +399,7 @@
     var dt = t - lastT; lastT = t;
     if (dt > 0 && dt < 250) avg = avg * .95 + dt * .05;
     if (!lite && avg > 26) lite = true;
+    else if (lite && avg < 19) lite = false;
     prog += (target - prog) * .08;
     if (lite && (odd = !odd)) return;
     safeDraw(t);
@@ -416,12 +418,17 @@
     });
   }
   // Copy email
+  var copyTimer;
   document.getElementById('copy').addEventListener('click', function () {
     var btn = this, el = document.getElementById('email');
-    function done(msg) { btn.textContent = msg; setTimeout(function () { btn.textContent = 'Copy email'; }, 1600); }
+    function done(msg) {
+      btn.textContent = msg;
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(function () { btn.textContent = 'Copy email'; }, 1600);
+    }
     function fallback() {
       var r = document.createRange(); r.selectNodeContents(el);
-      var s = getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected, press Ctrl+C');
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r); done('Selected, now copy it');
     }
     if (navigator.clipboard) navigator.clipboard.writeText(el.textContent).then(function () { done('Copied'); }, fallback);
     else fallback();
