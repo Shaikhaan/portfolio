@@ -199,7 +199,8 @@
   }
 
   function paintComet(x, th) {
-    var t0 = 0, N = 60;
+    // The tail starts well past the top right and fades out, so its end never shows as the comet slides down
+    var t0 = -.3, N = 70;
     x.clearRect(-PAD, -PAD, W + 2 * PAD, H + 2 * PAD);
     x.save();
     x.globalCompositeOperation = 'lighter';
@@ -222,7 +223,8 @@
       var g = x.createLinearGradient(head.x, head.y, far.x, far.y);
       g.addColorStop(0, 'rgba(' + b[2] + ',' + b[3] * .4 + ')');
       g.addColorStop(.12, 'rgba(' + b[2] + ',' + b[3] + ')');
-      g.addColorStop(1, 'rgba(' + b[2] + ',' + b[3] * .7 + ')');
+      g.addColorStop(.6, 'rgba(' + b[2] + ',' + b[3] * .75 + ')');
+      g.addColorStop(1, 'rgba(' + b[2] + ',0)');
       x.fillStyle = g;
       soft(x, b[4], 'rgba(' + b[2] + ',' + b[3] + ')');
       x.fill();
