@@ -108,17 +108,13 @@ footer { padding-block: 2rem 3rem; color: var(--muted); font-size: .85rem; displ
 .plinks a:hover { border-color: var(--lav); }
 .email { user-select: all; overflow-wrap: anywhere; }
 button.btn { cursor: pointer; font-family: var(--sans); }
-/* Readability over the bright clouds and comet: a dark band behind the top bar, a soft dark
-   wash behind the contact text, and tight shadows on smaller text */
+/* Readability over the bright clouds and comet: a dark band behind the top bar and
+   tight shadows on smaller text */
 .page::before { content: ""; position: fixed; inset: 0 0 auto 0; height: 170px; z-index: -1; pointer-events: none;
   background: linear-gradient(rgba(6, 12, 24, .78), rgba(6, 12, 24, 0)); }
 nav.top .links { padding: .4rem 1.1rem; border-radius: 999px; color: var(--fg);
   background: rgba(10, 22, 42, .55); border: 1px solid var(--line); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 nav.top .logo { text-shadow: 0 1px 3px rgba(5, 10, 20, .9), 0 0 18px rgba(5, 10, 20, .8); }
-.contact { position: relative; }
-.contact::before { content: ""; position: absolute; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(6, 12, 24, .72), rgba(6, 12, 24, .45) 60%, rgba(6, 12, 24, 0)); }
-.contact::before { inset: 0 20% 10% -15%; }
 .kicker, .hero p, .contact p, .mail span { text-shadow: 0 1px 3px rgba(5, 10, 20, .95), 0 0 16px rgba(5, 10, 20, .85); }
 .hero p, .contact p { color: #d6e0ee; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
