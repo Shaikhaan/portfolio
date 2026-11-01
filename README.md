@@ -8,9 +8,9 @@ Open `index.html` in a browser to view it locally.
 
 - Content (name, projects, experience, skills, contact) is plain HTML in `index.html`.
 - Colors and fonts are tokens in the `:root` block at the top of the `<style>`.
-- Each project card has a small constellation drawn as an inline SVG (`<svg class="const">`): stars are `<circle>`, lines are `<line>`.
+- Each project card opens with a small sketch of that app's screen (`<div class="shot">`), drawn as an inline SVG. Edit the `<text>` and `<rect>` elements inside it to match your project.
 - The night sky behind the page is drawn on the `<canvas id="sky">` by the script at the bottom of `index.html`.
-- The "Calm" button in the top bar turns off all animation for visitors who prefer less motion.
+- Visitors whose device is set to reduce motion get a still sky and no animations.
 
 ## Hosting on GitHub Pages
 

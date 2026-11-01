@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Your Name Portfolio</title>
+<title>Ahmed Shaikhaan Portfolio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Portfolio of Your Name, software developer.">
+<meta name="description" content="Ahmed Shaikhaan, software developer from Male', Maldives. Windows apps, web apps and games.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
 <style>
 /* Layout: one long night sky. A fixed starfield sits behind the whole page; you scroll from the
-   open sky (intro, projects as constellations, story) down to a hill at the bottom (contact).
+   open sky (intro, projects, story) down to a hill at the bottom (contact).
    Deliberately single-theme: deep indigo night, soft white text, lavender and rose starlight. */
 :root {
   --deep: #070d26;
@@ -54,13 +54,6 @@ header.nav {
 .nav nav { display: flex; align-items: center; gap: 1.6rem; font-size: .92rem; }
 .nav nav a { text-decoration: none; color: var(--muted); transition: color .3s; }
 .nav nav a:hover { color: var(--fg); }
-.calm {
-  font: 500 .78rem var(--sans); letter-spacing: .08em; color: var(--muted); cursor: pointer;
-  background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: .35rem .8rem;
-  transition: color .3s, border-color .3s;
-}
-.calm:hover { color: var(--fg); border-color: var(--lav); }
-.calm[aria-pressed="true"] { background: var(--lav); color: var(--deep); border-color: var(--lav); }
 @media (max-width: 640px) { .nav nav a.opt { display: none; } .nav nav { gap: 1rem; } }
 
 /* Moon */
@@ -94,7 +87,7 @@ section.block { padding-block: clamp(4rem, 10vw, 7rem); }
 h2 { font: 700 clamp(2rem, 5vw, 3.2rem)/1.1 var(--serif); margin: 0; text-wrap: balance; }
 .sec-head p { margin: 0; color: var(--muted); }
 
-/* Projects as constellations */
+/* Projects: each card opens with a small sketch of the app's own screen */
 .sky-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 @media (max-width: 760px) { .sky-grid { grid-template-columns: 1fr; } }
 .proj {
@@ -104,14 +97,21 @@ h2 { font: 700 clamp(2rem, 5vw, 3.2rem)/1.1 var(--serif); margin: 0; text-wrap: 
   transition: border-color .5s, transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s;
 }
 .proj:hover { border-color: rgba(201, 195, 255, .45); transform: translateY(-4px); box-shadow: 0 24px 60px -30px rgba(150, 140, 255, .5); }
-.const { width: 100%; height: auto; display: block; overflow: visible; }
-.const line { stroke: var(--lav); stroke-width: 1; opacity: .25; stroke-dasharray: 1; stroke-dashoffset: 0; transition: opacity .6s; }
-.const circle { fill: #fff; transition: filter .6s, r .6s; }
-.const circle.big { fill: #fff6e2; }
-.const text { fill: var(--dim); font: 500 9px var(--sans); letter-spacing: .2em; }
-.proj:hover .const line { opacity: .85; animation: trace 1.1s cubic-bezier(.5,0,.2,1) both; }
-.proj:hover .const circle { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px var(--lav)); }
-@keyframes trace { from { stroke-dashoffset: 1; } }
+.shot { border-radius: 12px; border: 1px solid var(--line); background: rgba(7, 13, 38, .75); overflow: hidden; transition: border-color .5s; }
+.proj:hover .shot { border-color: rgba(201, 195, 255, .45); }
+.shot-bar { display: flex; align-items: center; gap: 5px; padding: .45rem .75rem; border-bottom: 1px solid var(--line); font: 500 .72rem var(--sans); letter-spacing: .08em; color: var(--dim); }
+.shot-bar i { width: 7px; height: 7px; border-radius: 50%; background: rgba(201, 195, 255, .25); }
+.shot-bar span { margin-left: .5rem; }
+.shot svg { display: block; width: 100%; height: auto; }
+.shot text { font-family: var(--sans); font-size: 8px; fill: var(--muted); }
+.shot .fg { fill: var(--fg); font-weight: 700; }
+.shot .dim { fill: var(--dim); font-size: 7px; }
+.shot .lav { fill: var(--lav); }
+.shot .rose { fill: var(--rose); }
+.shot .ink { fill: var(--deep); font-weight: 700; }
+.shot .pn { fill: rgba(201, 195, 255, .07); }
+.shot .chip { fill: rgba(201, 195, 255, .14); }
+.shot .out { fill: none; stroke: var(--line); }
 .proj .meta { font: 500 .78rem var(--sans); letter-spacing: .2em; color: var(--lav); }
 .proj h3 { font: 700 1.6rem/1.2 var(--serif); margin: 0; }
 .proj p { margin: 0; color: var(--muted); }
@@ -169,24 +169,18 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-html.calm *, html.calm *::before, html.calm *::after { animation: none !important; transition: none !important; }
 </style>
 </head>
 <body>
-<script>
-// Restore Calm mode before anything animates
-try { if (localStorage.getItem('calm') === '1') document.documentElement.classList.add('calm'); } catch (e) {}
-</script>
 <canvas id="sky" aria-hidden="true"></canvas>
 
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="#top">Your Name<span>星</span></a>
+    <a class="logo" href="#top">Ahmed Shaikhaan</a>
     <nav aria-label="Main">
       <a href="#work">Work</a>
       <a class="opt" href="#story">Story</a>
       <a href="#contact">Contact</a>
-      <button class="calm" id="calm" type="button" aria-pressed="false" title="Stop all animations">Calm</button>
     </nav>
   </div>
 </header>
@@ -195,13 +189,13 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
   <section class="hero">
     <div class="moon" aria-hidden="true"></div>
     <div class="wrap">
-      <span class="kicker">星空 · PORTFOLIO</span>
-      <h1>Your Name</h1>
+      <span class="kicker">PORTFOLIO</span>
+      <h1>Ahmed Shaikhaan</h1>
       <p class="lede">Software developer. I build small, useful things that make long nights a little shorter.</p>
-      <span class="status"><i></i>Open to internships and full-time roles</span>
+      <span class="status"><i></i>Open to work · Male', Maldives</span>
       <div class="btns">
         <a class="btn solid" href="#work">See my work</a>
-        <a class="btn" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://github.com/Shaikhaan" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </section>
@@ -209,62 +203,97 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
   <section class="block" id="work">
     <div class="wrap">
       <div class="sec-head reveal">
-        <span class="kicker">作品 · WORK</span>
-        <h2>Constellations</h2>
-        <p>Every project is its own little constellation. Hover one to trace its lines.</p>
+        <span class="kicker">WORK</span>
+        <h2>Projects</h2>
+        <p>Things I have built, each with a quick look at how it works.</p>
       </div>
       <div class="sky-grid">
         <article class="proj reveal">
-          <svg class="const" viewBox="0 0 240 110" aria-hidden="true">
-            <line x1="20" y1="80" x2="70" y2="40" pathLength="1"/><line x1="70" y1="40" x2="120" y2="60" pathLength="1"/>
-            <line x1="120" y1="60" x2="170" y2="22" pathLength="1"/><line x1="170" y1="22" x2="220" y2="48" pathLength="1"/><line x1="120" y1="60" x2="150" y2="96" pathLength="1"/>
-            <circle cx="20" cy="80" r="2.2"/><circle cx="70" cy="40" r="3"/><circle class="big" cx="120" cy="60" r="4"/><circle cx="170" cy="22" r="2.6"/><circle cx="220" cy="48" r="2"/><circle cx="150" cy="96" r="2.2"/>
-            <text x="2" y="106">SPRINT</text>
-          </svg>
+          <div class="shot" aria-hidden="true">
+            <div class="shot-bar"><i></i><i></i><i></i><span>Tidybird</span></div>
+            <svg viewBox="0 0 240 120">
+              <rect class="pn" x="8" y="8" width="60" height="104" rx="6"/>
+              <text class="dim" x="15" y="22">FOLDERS</text>
+              <text x="15" y="40">Images</text><text class="dim" x="61" y="40" text-anchor="end">14</text>
+              <text x="15" y="56">Docs</text><text class="dim" x="61" y="56" text-anchor="end">9</text>
+              <text x="15" y="72">Music</text><text class="dim" x="61" y="72" text-anchor="end">6</text>
+              <text x="15" y="88">Apps</text><text class="dim" x="61" y="88" text-anchor="end">3</text>
+              <rect class="pn" x="76" y="8" width="156" height="17" rx="4"/><text x="83" y="19.5">photo.jpg</text><text class="dim" x="150" y="19.5">to</text><rect class="chip" x="166" y="11" width="58" height="11" rx="5.5"/><text class="lav" x="195" y="19" text-anchor="middle">Images</text>
+              <rect class="pn" x="76" y="29" width="156" height="17" rx="4"/><text x="83" y="40.5">report.pdf</text><text class="dim" x="150" y="40.5">to</text><rect class="chip" x="166" y="32" width="58" height="11" rx="5.5"/><text class="lav" x="195" y="40" text-anchor="middle">Docs</text>
+              <rect class="pn" x="76" y="50" width="156" height="17" rx="4"/><text x="83" y="61.5">song.mp3</text><text class="dim" x="150" y="61.5">to</text><rect class="chip" x="166" y="53" width="58" height="11" rx="5.5"/><text class="lav" x="195" y="61" text-anchor="middle">Music</text>
+              <rect class="pn" x="76" y="71" width="156" height="17" rx="4"/><text x="83" y="82.5">setup.exe</text><text class="dim" x="150" y="82.5">to</text><rect class="chip" x="166" y="74" width="58" height="11" rx="5.5"/><text class="lav" x="195" y="82" text-anchor="middle">Apps</text>
+              <rect class="out" x="76.5" y="96.5" width="52" height="15" rx="7.5"/><text x="102.5" y="106.5" text-anchor="middle">Preview</text>
+              <rect class="lav" x="134" y="96" width="48" height="16" rx="8"/><text class="ink" x="158" y="106.5" text-anchor="middle">Sort</text>
+              <rect class="out" x="188.5" y="96.5" width="43" height="15" rx="7.5"/><text x="210" y="106.5" text-anchor="middle">Undo</text>
+            </svg>
+          </div>
+          <span class="meta">2026 · WINDOWS APP</span>
+          <h3>Tidybird</h3>
+          <p>A small Windows app that sorts your Downloads folder by type. Preview every move first, undo a sort, or let it auto-sort new downloads from the tray. One ~60 KB exe, no install.</p>
+          <div class="tags"><span class="tag">C#</span><span class="tag">.NET Framework</span><span class="tag">PowerShell</span></div>
+          <div class="plinks"><a href="https://github.com/Shaikhaan/tidybird/releases/latest" target="_blank" rel="noopener">Download ↗</a><a href="https://github.com/Shaikhaan/tidybird" target="_blank" rel="noopener">Source ↗</a></div>
+        </article>
+        <article class="proj reveal">
+          <div class="shot" aria-hidden="true">
+            <div class="shot-bar"><i></i><i></i><i></i><span>History Quest</span></div>
+            <svg viewBox="0 0 240 120">
+              <text class="dim" x="10" y="16">EGYPT · QUESTION 3 OF 10</text>
+              <text class="rose" x="230" y="16" text-anchor="end">120 pts</text>
+              <rect class="pn" x="10" y="22" width="220" height="3" rx="1.5"/><rect class="lav" x="10" y="22" width="66" height="3" rx="1.5"/>
+              <text class="fg" x="10" y="44" style="font-size:9.5px">Who were the pyramids of Giza built for?</text>
+              <rect x="10.5" y="54.5" width="105" height="24" rx="6" fill="rgba(201,195,255,.16)" stroke="var(--lav)"/><text class="fg" x="20" y="69.5">Pharaohs</text><text class="lav" x="106" y="69.5" text-anchor="end">✓</text>
+              <rect class="out" x="124.5" y="54.5" width="105" height="24" rx="6"/><text x="134" y="69.5">Merchants</text>
+              <rect class="out" x="10.5" y="84.5" width="105" height="24" rx="6"/><text x="20" y="99.5">Soldiers</text>
+              <rect class="out" x="124.5" y="84.5" width="105" height="24" rx="6"/><text x="134" y="99.5">Farmers</text>
+            </svg>
+          </div>
+          <span class="meta">2025 · WEB APP</span>
+          <h3>History Quest</h3>
+          <p>Interactive history lessons and quizzes on five civilizations. Read a lesson, take a 10-question quiz, and earn points and badges. Answers are checked on the server.</p>
+          <div class="tags"><span class="tag">Node.js</span><span class="tag">SQLite</span><span class="tag">JavaScript</span><span class="tag">REST API</span></div>
+          <div class="plinks"><a href="https://github.com/Shaikhaan/History-quiz" target="_blank" rel="noopener">Source ↗</a></div>
+        </article>
+        <article class="proj reveal">
+          <div class="shot" aria-hidden="true">
+            <div class="shot-bar"><i></i><i></i><i></i><span>Firefly Flight</span></div>
+            <svg viewBox="0 0 240 120">
+              <rect width="240" height="120" fill="#050a1e"/>
+              <circle cx="30" cy="16" r=".9" fill="#fff"/><circle cx="76" cy="28" r=".7" fill="#fff"/><circle cx="182" cy="12" r="1" fill="#fff"/><circle cx="214" cy="34" r=".7" fill="#fff"/><circle cx="118" cy="10" r=".8" fill="#fff"/>
+              <path d="M150 0 V26 M156 0 V18 M162 0 V30" stroke="#24325e" stroke-width="1.5"/>
+              <polygon points="16,100 34,52 52,100" fill="#0d1840"/><polygon points="196,100 214,46 232,100" fill="#0d1840"/>
+              <path d="M0 100 Q60 86 120 98 T240 94 V120 H0Z" fill="#0a1230"/>
+              <rect x="88" y="92" width="6" height="9" fill="#2a2f55"/><ellipse cx="91" cy="92" rx="9" ry="4" fill="rgba(244,184,200,.55)"/>
+              <rect x="168" y="90" width="5" height="8" fill="#2a2f55"/><ellipse cx="170.5" cy="90" rx="7" ry="3.5" fill="rgba(244,184,200,.45)"/>
+              <path d="M18 78 C50 60 70 84 100 66 S130 48 132 52" fill="none" stroke="rgba(255,240,170,.45)" stroke-dasharray="1 4" stroke-linecap="round"/>
+              <circle cx="134" cy="52" r="11" fill="rgba(255,240,170,.16)"/><circle cx="134" cy="52" r="3.2" fill="#fff6c2"/>
+              <text class="dim" x="230" y="14" text-anchor="end">SCORE 12</text>
+            </svg>
+          </div>
+          <span class="meta">2026 · GAME</span>
+          <h3>Firefly Flight</h3>
+          <p>Guide a glowing firefly through a night forest, between mushroom stumps and hanging moss. Ships as a Windows exe that runs without Python installed.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">pygame</span><span class="tag">PyInstaller</span></div>
+          <div class="plinks"><a href="https://github.com/Shaikhaan/firefly-flight/releases/latest" target="_blank" rel="noopener">Download ↗</a><a href="https://github.com/Shaikhaan/firefly-flight" target="_blank" rel="noopener">Source ↗</a></div>
+        </article>
+        <article class="proj reveal">
+          <div class="shot" aria-hidden="true">
+            <div class="shot-bar"><i></i><i></i><i></i><span>Kept</span></div>
+            <svg viewBox="0 0 240 120">
+              <text class="fg" x="10" y="16">Today</text>
+              <text class="lav" x="230" y="16" text-anchor="end">3 of 4 kept</text>
+              <text class="dim" x="10" y="36">9:00</text><text class="dim" x="10" y="58">10:00</text><text class="dim" x="10" y="80">11:00</text><text class="dim" x="10" y="102">12:00</text>
+              <rect x="44.5" y="26.5" width="186" height="17" rx="4" fill="rgba(201,195,255,.18)" stroke="rgba(201,195,255,.5)"/><text class="fg" x="52" y="37.5">Deep work</text><text class="lav" x="222" y="37.5" text-anchor="end">✓</text>
+              <rect x="44.5" y="48.5" width="186" height="17" rx="4" fill="rgba(244,184,200,.16)" stroke="rgba(244,184,200,.5)"/><text class="fg" x="52" y="59.5">Gym</text><text class="rose" x="222" y="59.5" text-anchor="end">✓</text>
+              <rect x="44.5" y="70.5" width="186" height="17" rx="4" fill="rgba(201,195,255,.18)" stroke="rgba(201,195,255,.5)"/><text class="fg" x="52" y="81.5">Read 20 pages</text><text class="lav" x="222" y="81.5" text-anchor="end">✓</text>
+              <rect class="out" x="44.5" y="92.5" width="186" height="17" rx="4" stroke-dasharray="3 3"/><text x="52" y="103.5">Call home</text>
+              <line x1="40" y1="90" x2="232" y2="90" stroke="var(--rose)"/><circle cx="40" cy="90" r="2.5" fill="var(--rose)"/>
+            </svg>
+          </div>
           <span class="meta">2026 · WEB APP</span>
-          <h3>StudySprint</h3>
-          <p>Spaced-repetition flashcard app that turns lecture PDFs into review decks with AI. Used by 300+ students in my department.</p>
-          <div class="tags"><span class="tag">Next.js</span><span class="tag">TypeScript</span><span class="tag">PostgreSQL</span><span class="tag">Claude API</span></div>
-          <div class="plinks"><a href="#">Live site ↗</a><a href="#">Source ↗</a></div>
-        </article>
-        <article class="proj reveal">
-          <svg class="const" viewBox="0 0 240 110" aria-hidden="true">
-            <line x1="30" y1="30" x2="90" y2="30" pathLength="1"/><line x1="90" y1="30" x2="110" y2="80" pathLength="1"/>
-            <line x1="110" y1="80" x2="180" y2="88" pathLength="1"/><line x1="180" y1="88" x2="214" y2="40" pathLength="1"/><line x1="90" y1="30" x2="150" y2="14" pathLength="1"/>
-            <circle cx="30" cy="30" r="2.4"/><circle class="big" cx="90" cy="30" r="3.8"/><circle cx="110" cy="80" r="2.6"/><circle cx="180" cy="88" r="3"/><circle cx="214" cy="40" r="2.2"/><circle cx="150" cy="14" r="2"/>
-            <text x="2" y="106">LEDGER</text>
-          </svg>
-          <span class="meta">2026 · WEB APP</span>
-          <h3>Ledgerly</h3>
-          <p>Expense tracker that reads bank SMS exports, auto-categorizes spending, and charts monthly budgets.</p>
-          <div class="tags"><span class="tag">React</span><span class="tag">FastAPI</span><span class="tag">SQLite</span></div>
-          <div class="plinks"><a href="#">Live site ↗</a><a href="#">Source ↗</a></div>
-        </article>
-        <article class="proj reveal">
-          <svg class="const" viewBox="0 0 240 110" aria-hidden="true">
-            <line x1="16" y1="60" x2="60" y2="70" pathLength="1"/><line x1="60" y1="70" x2="104" y2="50" pathLength="1"/>
-            <line x1="104" y1="50" x2="148" y2="62" pathLength="1"/><line x1="148" y1="62" x2="192" y2="40" pathLength="1"/><line x1="192" y1="40" x2="226" y2="56" pathLength="1"/>
-            <circle cx="16" cy="60" r="2.2"/><circle cx="60" cy="70" r="2.8"/><circle cx="104" cy="50" r="2.4"/><circle class="big" cx="148" cy="62" r="4"/><circle cx="192" cy="40" r="2.6"/><circle cx="226" cy="56" r="2"/>
-            <text x="2" y="106">ROUTE</text>
-          </svg>
-          <span class="meta">2025 · MOBILE APP</span>
-          <h3>Campus Bus Live</h3>
-          <p>Real-time shuttle tracker for my college, built in a 36-hour hackathon. Won second place.</p>
-          <div class="tags"><span class="tag">Flutter</span><span class="tag">Firebase</span><span class="tag">Maps SDK</span></div>
-          <div class="plinks"><a href="#">Demo ↗</a><a href="#">Source ↗</a></div>
-        </article>
-        <article class="proj reveal">
-          <svg class="const" viewBox="0 0 240 110" aria-hidden="true">
-            <line x1="40" y1="56" x2="100" y2="56" pathLength="1"/><line x1="100" y1="56" x2="160" y2="20" pathLength="1"/>
-            <line x1="100" y1="56" x2="170" y2="58" pathLength="1"/><line x1="100" y1="56" x2="160" y2="94" pathLength="1"/><line x1="170" y1="58" x2="222" y2="62" pathLength="1"/>
-            <circle cx="40" cy="56" r="2.4"/><circle class="big" cx="100" cy="56" r="4"/><circle cx="160" cy="20" r="2.6"/><circle cx="170" cy="58" r="2.8"/><circle cx="160" cy="94" r="2.4"/><circle cx="222" cy="62" r="2"/>
-            <text x="2" y="106">TIDY</text>
-          </svg>
-          <span class="meta">2025 · CLI TOOL</span>
-          <h3>tidyup-cli</h3>
-          <p>Command-line tool that sorts a messy Downloads folder by file type and date. 120 stars on GitHub.</p>
-          <div class="tags"><span class="tag">Python</span><span class="tag">Click</span><span class="tag">PyPI</span></div>
-          <div class="plinks"><a href="#">Source ↗</a></div>
+          <h3>Kept</h3>
+          <p>Plan your day in time blocks and keep the promises you made to yourself. A live timeline, repeating entries, and a count of how many blocks you kept today.</p>
+          <div class="tags"><span class="tag">JavaScript</span><span class="tag">Vite</span><span class="tag">HTML/CSS</span></div>
+          <div class="plinks"><span style="color:var(--dim)">Private repo</span></div>
         </article>
       </div>
     </div>
@@ -274,26 +303,26 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
     <div class="wrap story">
       <div class="reveal">
         <div class="sec-head" style="margin-bottom:1.5rem">
-          <span class="kicker">経歴 · STORY</span>
+          <span class="kicker">STORY</span>
           <h2>The path so far</h2>
         </div>
-        <p class="bio">I'm a computer science student who likes turning everyday annoyances into small, polished apps. I care about speed, clean interfaces and finishing what I start.</p>
+        <p class="bio">I'm a developer from Male', Maldives. I studied computer science at Villa College and UWE, and I like turning everyday annoyances into small, finished apps: a Downloads sorter, a history quiz site, a day planner and a pygame game.</p>
         <ol class="path">
-          <li><span class="when">2026 · SUMMER</span><h3>Software Engineering Intern, Company Name</h3><p>Built internal React dashboards and cut report load time from 8s to 1.2s.</p></li>
-          <li><span class="when">2025 · NOW</span><h3>Tech Lead, College Coding Club</h3><p>Run weekly workshops and organize a hackathon for 200+ students.</p></li>
-          <li><span class="when">2022 · 2026</span><h3>B.Tech Computer Science, University Name</h3><p>CGPA 8.6 / 10. Data structures, databases and distributed systems.</p></li>
+          <li><span class="when">2025 · NOW</span><h3>Building my own projects</h3><p>Designed, built and shipped Tidybird, History Quest, Firefly Flight and Kept on my own.</p></li>
+          <li><span class="when">2022 · 2025</span><h3>Computer Science (BSc), UWE Bristol</h3><p>Three years of study toward the BSc (degree not completed).</p></li>
+          <li><span class="when">2022 · 2025</span><h3>Diploma in Computer Science, Villa College</h3><p>Where I started programming.</p></li>
         </ol>
       </div>
       <div class="reveal">
         <div class="sec-head" style="margin-bottom:1.5rem">
-          <span class="kicker">道具 · TOOLKIT</span>
+          <span class="kicker">TOOLKIT</span>
           <h2>What I build with</h2>
         </div>
         <div class="skills">
-          <div><h3>Languages</h3><div class="tags"><span class="tag">TypeScript</span><span class="tag">Python</span><span class="tag">Java</span><span class="tag">SQL</span></div></div>
-          <div><h3>Frontend</h3><div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Tailwind</span><span class="tag">Flutter</span></div></div>
-          <div><h3>Backend</h3><div class="tags"><span class="tag">Node.js</span><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">Firebase</span></div></div>
-          <div><h3>Tools</h3><div class="tags"><span class="tag">Git</span><span class="tag">Docker</span><span class="tag">Linux</span><span class="tag">Figma</span></div></div>
+          <div><h3>Languages</h3><div class="tags"><span class="tag">Python</span><span class="tag">C++</span><span class="tag">JavaScript</span><span class="tag">C#</span></div></div>
+          <div><h3>Web</h3><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Node.js</span><span class="tag">Vite</span></div></div>
+          <div><h3>Data</h3><div class="tags"><span class="tag">SQLite</span><span class="tag">REST APIs</span></div></div>
+          <div><h3>Tools</h3><div class="tags"><span class="tag">Git</span><span class="tag">pygame</span><span class="tag">PyInstaller</span><span class="tag">.NET</span></div></div>
         </div>
       </div>
     </div>
@@ -301,16 +330,15 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
 
   <section class="contact" id="contact">
     <div class="wrap reveal">
-      <span class="kicker">連絡 · CONTACT</span>
+      <span class="kicker">CONTACT</span>
       <h2>Make a wish</h2>
-      <p>Have a role, a project or a hackathon team in mind? Send me a message. I reply within a day.</p>
+      <p>Have a role or a project in mind? Send me a message.</p>
       <div class="email-row">
-        <span class="email" id="email">hello@yourname.dev</span>
+        <span class="email" id="email">shaikhaan2004@gmail.com</span>
         <button class="btn solid" id="copy" type="button">Copy email</button>
       </div>
       <div class="socials">
-        <a href="https://github.com/" target="_blank" rel="noopener">GitHub ↗</a>
-        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://github.com/Shaikhaan" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </div>
     <svg class="hill" viewBox="0 0 1600 260" preserveAspectRatio="none" aria-hidden="true">
@@ -326,15 +354,14 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Your Name</span>
+    <span>© 2026 Ahmed Shaikhaan</span>
     <span>Made by hand under a lot of stars.</span>
   </div>
 </footer>
 
 <script>
 (function () {
-  var root = document.documentElement;
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || root.classList.contains('calm');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Fixed starfield: gentle twinkle, a soft Milky Way band, a shooting star every few seconds
   var cv = document.getElementById('sky'), ctx = cv.getContext('2d');
@@ -393,17 +420,6 @@ try { if (localStorage.getItem('calm') === '1') document.documentElement.classLi
     });
   }
   addEventListener('resize', function () { setup(); if (reduce) draw(0); });
-
-  // Calm mode: stops CSS motion at once, reloads so the sky redraws still
-  var calm = document.getElementById('calm');
-  calm.setAttribute('aria-pressed', String(root.classList.contains('calm')));
-  calm.addEventListener('click', function () {
-    var on = !root.classList.contains('calm');
-    root.classList.toggle('calm', on);
-    calm.setAttribute('aria-pressed', String(on));
-    try { localStorage.setItem('calm', on ? '1' : '0'); } catch (e) {}
-    setTimeout(function () { location.reload(); }, 150);
-  });
 
   // Copy email
   document.getElementById('copy').addEventListener('click', function () {
