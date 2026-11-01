@@ -324,6 +324,47 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
 /* Magnetic elements move via inline transform; keep it smooth */
 .magnetic { transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .25s, border-color .25s, background .2s, color .2s; }
 
+/* Scroll progress bar */
+.progress {
+  position: fixed; left: 0; top: env(safe-area-inset-top, 0px); width: 100%; height: 3px; z-index: 30; pointer-events: none;
+  background: var(--grad); transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+}
+
+/* Static film grain (never animated, so it can't flicker) */
+.grain {
+  position: fixed; inset: 0; z-index: 35; pointer-events: none; opacity: .07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Trailing cursor ring (mouse only, added by JS) */
+.ring {
+  position: fixed; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; z-index: 40;
+  border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--c3) 70%, transparent); pointer-events: none;
+  transition: width .25s, height .25s, margin .25s, background .25s, border-color .25s;
+}
+.ring.big { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: color-mix(in srgb, var(--c2) 12%, transparent); border-color: var(--c2); }
+
+/* Click sparks */
+.spark { position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 45; }
+
+/* Slowly rotating gradient border on featured cards */
+@property --ang { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.proj.featured, .proj.featured:hover {
+  border-color: transparent;
+  background: linear-gradient(var(--card), var(--card)) padding-box,
+              conic-gradient(from var(--ang), var(--c1), var(--c2), var(--c3), var(--c2), var(--c1)) border-box;
+  animation: spin 10s linear infinite;
+}
+@keyframes spin { to { --ang: 360deg; } }
+
+/* Calm mode toggle */
+.motion-btn {
+  font: 600 .8rem var(--body); color: var(--muted); cursor: pointer;
+  background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: .4rem .8rem;
+}
+.motion-btn:hover { color: var(--fg); border-color: var(--muted); }
+.motion-btn[aria-pressed="true"] { color: var(--bg); background: var(--c3); border-color: var(--c3); }
+
 /* Motion */
 @media (prefers-reduced-motion: no-preference) {
   h1 .ch { animation: up .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 35ms + 100ms); }
@@ -339,6 +380,7 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+html.calm *, html.calm *::before, html.calm *::after { animation: none !important; transition: none !important; }
 </style>
 </head>
 <body>
@@ -356,6 +398,8 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
 <script>
 // Intro loader: runs on its own so a later script error can't leave it stuck
 (function () {
+  // Calm mode chosen earlier: apply before anything animates
+  try { if (localStorage.getItem('calm') === '1') { document.documentElement.classList.add('calm'); return; } } catch (e) {}
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   // Only on the first visit per browser session
   var seen = false;
@@ -378,6 +422,8 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
 </script>
 
 <div class="cursor-glow" id="glow" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="wrap">
@@ -386,6 +432,7 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
       <a href="#work">Work</a>
       <a class="hide-sm" href="#about">About</a>
       <a class="hide-sm" href="#contact">Contact</a>
+      <button class="motion-btn" id="motion-btn" type="button" aria-pressed="false" title="Stop all animations">Calm mode</button>
       <a class="hire" href="#contact">Hire me</a>
     </nav>
   </div>
@@ -568,7 +615,8 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
 
 <script>
 (function () {
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || root.classList.contains('calm');
   var finePointer = matchMedia('(pointer: fine)').matches;
 
   // Split hero lines into letters for the staggered entrance
@@ -704,6 +752,79 @@ footer .wrap { padding-block: 1.5rem; display: flex; flex-wrap: wrap; justify-co
       }).observe(hero);
     }
   })();
+
+  // Calm mode toggle: stops CSS motion at once, reloads so scripted effects stay off
+  var motionBtn = document.getElementById('motion-btn');
+  motionBtn.setAttribute('aria-pressed', String(root.classList.contains('calm')));
+  motionBtn.addEventListener('click', function () {
+    var on = !root.classList.contains('calm');
+    root.classList.toggle('calm', on);
+    motionBtn.setAttribute('aria-pressed', String(on));
+    try { localStorage.setItem('calm', on ? '1' : '0'); } catch (e) {}
+    setTimeout(function () { location.reload(); }, 150);
+  });
+
+  // Scroll progress bar
+  var bar = document.getElementById('progress');
+  function progress() {
+    var h = root.scrollHeight - innerHeight;
+    bar.style.setProperty('--p', h > 0 ? Math.min(scrollY / h, 1) : 0);
+  }
+  addEventListener('scroll', progress, { passive: true }); progress();
+
+  // Trailing cursor ring that grows over clickable things (mouse only)
+  if (finePointer && !reduce) {
+    var ring = document.createElement('div');
+    ring.className = 'ring'; ring.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(ring);
+    var rx = -100, ry = -100, tx = -100, ty = -100;
+    addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+    (function follow() {
+      rx += (tx - rx) * .18; ry += (ty - ry) * .18;
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+      requestAnimationFrame(follow);
+    })();
+    document.querySelectorAll('a, button, .proj').forEach(function (el) {
+      el.addEventListener('pointerenter', function () { ring.classList.add('big'); });
+      el.addEventListener('pointerleave', function () { ring.classList.remove('big'); });
+    });
+  }
+
+  // Click sparks: a small burst that fades out, no flashing
+  if (!reduce && Element.prototype.animate) {
+    addEventListener('pointerdown', function (e) {
+      for (var i = 0; i < 10; i++) {
+        var s = document.createElement('span'), a = Math.random() * Math.PI * 2, d = 30 + Math.random() * 40;
+        s.className = 'spark';
+        s.style.left = e.clientX - 3 + 'px'; s.style.top = e.clientY - 3 + 'px';
+        s.style.background = 'var(' + ['--c1', '--c2', '--c3'][i % 3] + ')';
+        document.body.appendChild(s);
+        s.animate([
+          { transform: 'translate(0,0) scale(1)', opacity: 1 },
+          { transform: 'translate(' + Math.cos(a) * d + 'px,' + Math.sin(a) * d + 'px) scale(0)', opacity: 0 }
+        ], { duration: 600 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = function () { this.effect.target.remove(); };
+      }
+    });
+  }
+
+  // Section labels decode from random characters when they scroll into view
+  if (!reduce && 'IntersectionObserver' in window) {
+    var glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&*+<>/';
+    var so = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        so.unobserve(e.target);
+        var el = e.target, final = el.textContent, f = 0, total = final.length * 3;
+        (function step() {
+          var out = '';
+          for (var i = 0; i < final.length; i++) out += (i < f / 3 || final[i] === ' ') ? final[i] : glyphs[Math.floor(Math.random() * glyphs.length)];
+          el.textContent = out;
+          if (f++ < total) setTimeout(step, 35); else el.textContent = final;
+        })();
+      });
+    }, { threshold: 1 });
+    document.querySelectorAll('.eyebrow').forEach(function (el) { so.observe(el); });
+  }
 
   // Copy email
   document.getElementById('copy-btn').addEventListener('click', function () {
