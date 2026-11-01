@@ -8,7 +8,8 @@ Open `index.html` in a browser to view it locally.
 
 - Content (name, projects, experience, skills, contact) is plain HTML in `index.html`.
 - Colors and fonts are tokens in the `:root` block at the top of the `<style>`.
-- Each project's diagram is an inline SVG inside its `<figure class="fig">`. Boxes are `<rect>`, connectors are `<path>`, labels are `<text>`.
+- Each project card has a small constellation drawn as an inline SVG (`<svg class="const">`): stars are `<circle>`, lines are `<line>`.
+- The night sky behind the page is drawn on the `<canvas id="sky">` by the script at the bottom of `index.html`.
 - The "Calm" button in the top bar turns off all animation for visitors who prefer less motion.
 
 ## Hosting on GitHub Pages
