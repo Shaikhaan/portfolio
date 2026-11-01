@@ -9,8 +9,11 @@ Open `index.html` in a browser to view it locally.
 - Content (name, projects, experience, skills, contact) is plain HTML in `index.html`.
 - Colors and fonts are tokens in the `:root` block at the top of the `<style>`.
 - Each project card opens with a small sketch of that app's screen (`<div class="shot">`), drawn as an inline SVG. Edit the `<text>` and `<rect>` elements inside it to match your project.
-- The night sky behind the page is drawn on the `<canvas id="sky">` by the script at the bottom of `index.html`.
-- Visitors whose device is set to reduce motion get a still sky and no animations.
+- The scene behind the page (night sky, clouds, comet, falling meteors and the city) is drawn on the `<canvas id="sky">` by the script at the bottom of `index.html`. The comet slides down the sky as you scroll.
+- The clouds, stars and buildings are placed by a seeded random generator, so the scene looks the same on every visit. Change `SEED` in the script to try a different layout.
+- On slow devices the page drops the small effects (meteors and sparkles) on its own. Browsers without canvas blur get glows drawn with shadows instead.
+- Visitors whose device is set to reduce motion get a still scene and no animations.
+- The tab icon is `favicon.svg`.
 
 ## Hosting on GitHub Pages
 
